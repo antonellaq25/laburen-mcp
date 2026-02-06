@@ -1,0 +1,21 @@
+name = "laburen-ecommerce-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[durable_objects]
+bindings = [
+  { name = "MCP_OBJECT", class_name = "EcommerceMCP" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["EcommerceMCP"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "laburen-db"
+database_id = "2006501a-b85d-4e6e-b391-d2bb7e5e0377"
+
+[observability]
+enabled = true
