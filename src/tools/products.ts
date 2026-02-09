@@ -26,9 +26,6 @@ export function registerProductTools(server: McpServer, env: { DB: D1Database })
       max_price?: number;
     }) => {
       const products = await searchProducts(env.DB, { name, tipo_prenda, talla, color, categoria, min_price, max_price });
-      if (products.length === 0) {
-        return toolSuccess('No se encontraron productos con los criterios especificados.');
-      }
       return toolSuccess({
         cantidad: products.length,
         productos: products.map(p => ({

@@ -27,13 +27,15 @@ describe('search_products tool', () => {
     expect(data.productos.every((p: any) => p.tipo === 'Camiseta')).toBe(true);
   });
 
-  it('returns message when no products match', async () => {
+  it('returns empty list when no products match', async () => {
     const server = createMockServer();
     registerProductTools(server, { DB: env.DB });
     const handler = server.getHandler('search_products')!;
 
     const result = await handler({ name: 'NoExiste12345' });
-    expect(result.content[0].text).toContain('No se encontraron productos');
+    const data = JSON.parse(result.content[0].text);
+    expect(data.cantidad).toBe(0);
+    expect(data.productos).toEqual([]);
   });
 
   it('returns all available products when no filters', async () => {

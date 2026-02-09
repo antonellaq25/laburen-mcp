@@ -16,10 +16,10 @@ export function toolError(message: string): ToolResponse {
   };
 }
 
-export function withErrorHandler(
+export function withErrorHandler<T extends unknown[]>(
   errorPrefix: string,
-  handler: (...args: any[]) => Promise<ToolResponse>,
-): (...args: any[]) => Promise<ToolResponse> {
+  handler: (...args: T) => Promise<ToolResponse>,
+): (...args: T) => Promise<ToolResponse> {
   return async (...args) => {
     try {
       return await handler(...args);

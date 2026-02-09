@@ -55,6 +55,12 @@ export async function getProductById(db: D1Database, id: number): Promise<Produc
   return await db.prepare('SELECT * FROM products WHERE id = ?').bind(id).first<Product>();
 }
 
+function validateProduct(product: Product | null, productId: number, qty: number): asserts product is Product {
+  if (!product) throw new Error(`Producto con ID ${productId} no encontrado`);
+  if (!product.disponible) throw new Error(`El producto "${product.name}" no esta disponible actualmente`);
+  if (product.stock < qty) throw new Error(`Stock insuficiente. Disponible: ${product.stock}, solicitado: ${qty}`);
+}
+
 export async function createCart(db: D1Database): Promise<Cart> {
   const result = await db
     .prepare("INSERT INTO carts (created_at, updated_at) VALUES (datetime('now'), datetime('now')) RETURNING *")
@@ -70,9 +76,7 @@ export async function addToCart(
   qty: number
 ): Promise<CartItem> {
   const product = await getProductById(db, productId);
-  if (!product) throw new Error(`Producto con ID ${productId} no encontrado`);
-  if (product.stock < qty) throw new Error(`Stock insuficiente. Disponible: ${product.stock}, solicitado: ${qty}`);
-  if (!product.disponible) throw new Error(`El producto "${product.name}" no esta disponible actualmente`);
+  validateProduct(product, productId, qty);
 
   const cart = await db.prepare('SELECT id FROM carts WHERE id = ?').bind(cartId).first();
   if (!cart) throw new Error(`Carrito con ID ${cartId} no encontrado`);
@@ -101,9 +105,7 @@ export async function updateCartItem(
   qty: number
 ): Promise<CartItem> {
   const product = await getProductById(db, productId);
-  if (!product) throw new Error(`Producto con ID ${productId} no encontrado`);
-  if (!product.disponible) throw new Error(`El producto "${product.name}" no esta disponible actualmente`);
-  if (product.stock < qty) throw new Error(`Stock insuficiente. Disponible: ${product.stock}, solicitado: ${qty}`);
+  validateProduct(product, productId, qty);
 
   const result = await db
     .prepare('UPDATE cart_items SET qty = ? WHERE cart_id = ? AND product_id = ? RETURNING *')
