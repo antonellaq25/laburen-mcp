@@ -44,7 +44,7 @@ export async function searchProducts(
     params.push(filters.max_price);
   }
 
-  sql += ' ORDER BY name ASC LIMIT 50';
+  sql += ' ORDER BY name ASC LIMIT 100';
 
   const stmt = db.prepare(sql);
   const { results } = await (params.length > 0 ? stmt.bind(...params) : stmt).all<Product>();
