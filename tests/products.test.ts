@@ -1,21 +1,7 @@
 import { env } from 'cloudflare:test';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { seedDatabase } from './helpers';
+import { seedDatabase, createMockServer } from './helpers';
 import { registerProductTools } from '../src/tools/products';
-
-// Minimal mock MCP server that captures tool registrations
-function createMockServer() {
-  const tools = new Map<string, { description: string; schema: any; handler: Function }>();
-  return {
-    tool(name: string, description: string, schema: any, handler: Function) {
-      tools.set(name, { description, schema, handler });
-    },
-    getHandler(name: string) {
-      return tools.get(name)?.handler;
-    },
-    tools,
-  };
-}
 
 beforeEach(async () => {
   await seedDatabase(env.DB);

@@ -1,20 +1,7 @@
 import { env } from 'cloudflare:test';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { seedDatabase } from './helpers';
+import { seedDatabase, createMockServer } from './helpers';
 import { registerCartTools } from '../src/tools/cart';
-
-function createMockServer() {
-  const tools = new Map<string, { description: string; schema: any; handler: Function }>();
-  return {
-    tool(name: string, description: string, schema: any, handler: Function) {
-      tools.set(name, { description, schema, handler });
-    },
-    getHandler(name: string) {
-      return tools.get(name)?.handler;
-    },
-    tools,
-  };
-}
 
 beforeEach(async () => {
   await seedDatabase(env.DB);

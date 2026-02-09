@@ -1,5 +1,6 @@
 /**
- * Shared test helpers: seeds the D1 database with schema + sample data.
+ * Shared test helpers: seeds the D1 database with schema + sample data,
+ * and provides a mock MCP server for tool registration tests.
  */
 
 const SCHEMA = `
@@ -50,6 +51,19 @@ VALUES
   (10,'Pantalón S Azul',     'Pantalón',  'S',   'Azul',      0,  950,  850, 500, 1, 'Formal',    'Sin stock.'),
   (11,'Chaqueta L Negro',    'Chaqueta',  'L',   'Negro',   100, 1500, 1200, 900, 0, 'Formal',    'No disponible.');
 `;
+
+export function createMockServer() {
+  const tools = new Map<string, { description: string; schema: any; handler: Function }>();
+  return {
+    tool(name: string, description: string, schema: any, handler: Function) {
+      tools.set(name, { description, schema, handler });
+    },
+    getHandler(name: string) {
+      return tools.get(name)?.handler;
+    },
+    tools,
+  };
+}
 
 export async function seedDatabase(db: D1Database) {
   // Drop existing tables (order matters for foreign keys)

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { toolSuccess } from './response';
 
 export function registerSupportTools(server: any, env: { DB: D1Database }) {
   server.tool(
@@ -27,18 +28,13 @@ export function registerSupportTools(server: any, env: { DB: D1Database }) {
 
       console.log('HUMAN_HANDOFF:', JSON.stringify(escalation));
 
-      return {
-        content: [{
-          type: 'text' as const,
-          text: JSON.stringify({
-            mensaje: 'La conversacion ha sido escalada a un agente humano.',
-            escalation_id: `ESC-${Date.now()}`,
-            razon: reason,
-            etiquetas: tags ?? [],
-            estado: 'pendiente_revision_humana',
-          }, null, 2),
-        }],
-      };
+      return toolSuccess({
+        mensaje: 'La conversacion ha sido escalada a un agente humano.',
+        escalation_id: `ESC-${Date.now()}`,
+        razon: reason,
+        etiquetas: tags ?? [],
+        estado: 'pendiente_revision_humana',
+      });
     }
   );
 }

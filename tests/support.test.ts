@@ -1,19 +1,7 @@
 import { env } from 'cloudflare:test';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { createMockServer } from './helpers';
 import { registerSupportTools } from '../src/tools/support';
-
-function createMockServer() {
-  const tools = new Map<string, { description: string; schema: any; handler: Function }>();
-  return {
-    tool(name: string, description: string, schema: any, handler: Function) {
-      tools.set(name, { description, schema, handler });
-    },
-    getHandler(name: string) {
-      return tools.get(name)?.handler;
-    },
-    tools,
-  };
-}
 
 describe('handoff_to_human tool', () => {
   it('registers the tool', () => {

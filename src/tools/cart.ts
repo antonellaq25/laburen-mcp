@@ -1,27 +1,16 @@
 import { z } from 'zod';
 import { createCart, addToCart, updateCartItem, removeFromCart, getCartWithItems } from '../db/queries';
+import { toolSuccess, withErrorHandler } from './response';
 
 export function registerCartTools(server: any, env: { DB: D1Database }) {
   server.tool(
     'create_cart',
     'Crear un nuevo carrito de compras vacio. Llama a esta herramienta antes de agregar productos. Devuelve el ID del carrito para usar en operaciones posteriores.',
     {},
-    async () => {
-      try {
-        const cart = await createCart(env.DB);
-        return {
-          content: [{
-            type: 'text' as const,
-            text: JSON.stringify({ cart_id: cart.id, mensaje: 'Carrito creado exitosamente' }, null, 2),
-          }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: `Error creando carrito: ${(error as Error).message}` }],
-          isError: true,
-        };
-      }
-    }
+    withErrorHandler('Error creando carrito', async () => {
+      const cart = await createCart(env.DB);
+      return toolSuccess({ cart_id: cart.id, mensaje: 'Carrito creado exitosamente' });
+    })
   );
 
   server.tool(
@@ -32,25 +21,10 @@ export function registerCartTools(server: any, env: { DB: D1Database }) {
       product_id: z.number().describe('El ID del producto a agregar'),
       qty: z.number().int().min(1).describe('Cantidad a agregar (minimo 1)'),
     },
-    async ({ cart_id, product_id, qty }: { cart_id: number; product_id: number; qty: number }) => {
-      try {
-        const item = await addToCart(env.DB, cart_id, product_id, qty);
-        return {
-          content: [{
-            type: 'text' as const,
-            text: JSON.stringify({
-              mensaje: 'Producto agregado al carrito',
-              item: item,
-            }, null, 2),
-          }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: `Error agregando al carrito: ${(error as Error).message}` }],
-          isError: true,
-        };
-      }
-    }
+    withErrorHandler('Error agregando al carrito', async ({ cart_id, product_id, qty }: { cart_id: number; product_id: number; qty: number }) => {
+      const item = await addToCart(env.DB, cart_id, product_id, qty);
+      return toolSuccess({ mensaje: 'Producto agregado al carrito', item });
+    })
   );
 
   server.tool(
@@ -61,25 +35,10 @@ export function registerCartTools(server: any, env: { DB: D1Database }) {
       product_id: z.number().describe('El ID del producto a actualizar'),
       qty: z.number().int().min(1).describe('Nueva cantidad (reemplaza la cantidad existente)'),
     },
-    async ({ cart_id, product_id, qty }: { cart_id: number; product_id: number; qty: number }) => {
-      try {
-        const item = await updateCartItem(env.DB, cart_id, product_id, qty);
-        return {
-          content: [{
-            type: 'text' as const,
-            text: JSON.stringify({
-              mensaje: 'Producto actualizado en el carrito',
-              item: item,
-            }, null, 2),
-          }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: `Error actualizando carrito: ${(error as Error).message}` }],
-          isError: true,
-        };
-      }
-    }
+    withErrorHandler('Error actualizando carrito', async ({ cart_id, product_id, qty }: { cart_id: number; product_id: number; qty: number }) => {
+      const item = await updateCartItem(env.DB, cart_id, product_id, qty);
+      return toolSuccess({ mensaje: 'Producto actualizado en el carrito', item });
+    })
   );
 
   server.tool(
@@ -89,22 +48,10 @@ export function registerCartTools(server: any, env: { DB: D1Database }) {
       cart_id: z.number().describe('El ID del carrito'),
       product_id: z.number().describe('El ID del producto a eliminar'),
     },
-    async ({ cart_id, product_id }: { cart_id: number; product_id: number }) => {
-      try {
-        await removeFromCart(env.DB, cart_id, product_id);
-        return {
-          content: [{
-            type: 'text' as const,
-            text: JSON.stringify({ mensaje: 'Producto eliminado del carrito' }, null, 2),
-          }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: `Error eliminando del carrito: ${(error as Error).message}` }],
-          isError: true,
-        };
-      }
-    }
+    withErrorHandler('Error eliminando del carrito', async ({ cart_id, product_id }: { cart_id: number; product_id: number }) => {
+      await removeFromCart(env.DB, cart_id, product_id);
+      return toolSuccess({ mensaje: 'Producto eliminado del carrito' });
+    })
   );
 
   server.tool(
@@ -113,21 +60,9 @@ export function registerCartTools(server: any, env: { DB: D1Database }) {
     {
       cart_id: z.number().describe('El ID del carrito a consultar'),
     },
-    async ({ cart_id }: { cart_id: number }) => {
-      try {
-        const cartData = await getCartWithItems(env.DB, cart_id);
-        return {
-          content: [{
-            type: 'text' as const,
-            text: JSON.stringify(cartData, null, 2),
-          }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: `Error obteniendo carrito: ${(error as Error).message}` }],
-          isError: true,
-        };
-      }
-    }
+    withErrorHandler('Error obteniendo carrito', async ({ cart_id }: { cart_id: number }) => {
+      const cartData = await getCartWithItems(env.DB, cart_id);
+      return toolSuccess(cartData);
+    })
   );
 }

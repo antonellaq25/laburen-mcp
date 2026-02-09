@@ -59,7 +59,8 @@ export async function createCart(db: D1Database): Promise<Cart> {
   const result = await db
     .prepare("INSERT INTO carts (created_at, updated_at) VALUES (datetime('now'), datetime('now')) RETURNING *")
     .first<Cart>();
-  return result!;
+  if (!result) throw new Error('Error al crear el carrito');
+  return result;
 }
 
 export async function addToCart(
@@ -86,9 +87,11 @@ export async function addToCart(
     .bind(cartId, productId, qty)
     .first<CartItem>();
 
+  if (!result) throw new Error('Error al agregar producto al carrito');
+
   await db.prepare("UPDATE carts SET updated_at = datetime('now') WHERE id = ?").bind(cartId).run();
 
-  return result!;
+  return result;
 }
 
 export async function updateCartItem(
