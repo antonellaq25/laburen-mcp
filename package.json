@@ -10,16 +10,20 @@
     "db:migrate:remote": "wrangler d1 migrations apply laburen-db --remote",
     "db:seed:local": "wrangler d1 execute laburen-db --local --file=./seeds/seed.sql",
     "db:seed:remote": "wrangler d1 execute laburen-db --remote --file=./seeds/seed.sql",
-    "xlsx-to-sql": "npx tsx scripts/xlsx-to-sql.ts"
+    "xlsx-to-sql": "npx tsx scripts/xlsx-to-sql.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "agents": "^0.3.6",
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.12.10",
     "@types/node": "^22.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
+    "vitest": "~3.2.0",
     "wrangler": "^4.0.0",
     "xlsx": "^0.18.5"
   }
