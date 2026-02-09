@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { toolSuccess } from './response';
+import type { McpServer } from '../types';
 
-export function registerSupportTools(server: any, env: { DB: D1Database }) {
+export function registerSupportTools(server: McpServer, env: { DB: D1Database }) {
   server.tool(
     'handoff_to_human',
     'Escalar la conversacion a un agente humano de soporte. Usa esta herramienta cuando el cliente tiene una pregunta o problema que no puede ser resuelto por el agente de IA, como quejas, solicitudes de reembolso, pedidos personalizados o problemas tecnicos.',

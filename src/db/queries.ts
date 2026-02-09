@@ -102,6 +102,7 @@ export async function updateCartItem(
 ): Promise<CartItem> {
   const product = await getProductById(db, productId);
   if (!product) throw new Error(`Producto con ID ${productId} no encontrado`);
+  if (!product.disponible) throw new Error(`El producto "${product.name}" no esta disponible actualmente`);
   if (product.stock < qty) throw new Error(`Stock insuficiente. Disponible: ${product.stock}, solicitado: ${qty}`);
 
   const result = await db

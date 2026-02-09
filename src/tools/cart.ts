@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { createCart, addToCart, updateCartItem, removeFromCart, getCartWithItems } from '../db/queries';
 import { toolSuccess, withErrorHandler } from './response';
+import type { McpServer } from '../types';
 
-export function registerCartTools(server: any, env: { DB: D1Database }) {
+export function registerCartTools(server: McpServer, env: { DB: D1Database }) {
   server.tool(
     'create_cart',
     'Crear un nuevo carrito de compras vacio. Llama a esta herramienta antes de agregar productos. Devuelve el ID del carrito para usar en operaciones posteriores.',

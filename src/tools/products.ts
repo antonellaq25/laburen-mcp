@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { searchProducts, getProductById } from '../db/queries';
 import { toolSuccess, toolError, withErrorHandler } from './response';
+import type { McpServer } from '../types';
 
-export function registerProductTools(server: any, env: { DB: D1Database }) {
+export function registerProductTools(server: McpServer, env: { DB: D1Database }) {
   server.tool(
     'search_products',
     'Buscar y listar productos con filtros opcionales. Usa esta herramienta para ayudar a los clientes a encontrar productos por nombre, tipo de prenda, talla, color, categoria o rango de precio.',

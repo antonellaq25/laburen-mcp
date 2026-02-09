@@ -3,6 +3,10 @@ export interface Env {
   MCP_OBJECT: DurableObjectNamespace;
 }
 
+export interface McpServer {
+  tool(name: string, description: string, schema: Record<string, unknown>, handler: Function): void;
+}
+
 export interface Product {
   id: number;
   name: string;
