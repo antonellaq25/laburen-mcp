@@ -1,16 +1,17 @@
-# Agente de Ventas E-Commerce con IA - Diseno Conceptual
+# Agente de Ventas E-Commerce con IA - Diseño Conceptual
 
 ## 1. Arquitectura del Sistema
 
 El sistema se compone de tres capas principales desplegadas en la infraestructura de Cloudflare:
 
 ```
-WhatsApp → Chatwoot → Laburen (Agente IA) → MCP Server (Cloudflare Worker) → D1 Database
+WhatsApp → Twilio → Chatwoot → Laburen (Agente IA) → MCP Server (Cloudflare Worker) → D1 Database
 ```
 
+- **Twilio**: Gateway de mensajeria que recibe los mensajes de WhatsApp y los envia a Chatwoot
 - **MCP Server**: Cloudflare Worker con Durable Objects (`McpAgent`) para manejo de sesiones
 - **Base de Datos**: Cloudflare D1 (SQLite) con tablas relacionales y foreign keys
-- **Transporte**: Streamable HTTP en endpoint `/sse`
+- **Transporte**: Streamable HTTP en endpoint `/mcp`
 - **Autenticacion**: Sin autenticacion (authless) para el alcance del challenge
 
 ## 2. Modelo de Datos
@@ -44,11 +45,3 @@ El agente sigue un flujo conversacional natural:
 4. **Edicion del carrito**: El cliente puede modificar cantidades (`update_cart_item`) o eliminar productos (`remove_from_cart`)
 5. **Revision**: Se usa `get_cart` para mostrar el resumen del carrito con precios
 6. **Escalacion**: Si el agente no puede resolver una consulta, se usa `handoff_to_human` con etiquetas de contexto para enrutar correctamente
-
-## 5. Decisiones de Diseno
-
-- **McpAgent con Durable Objects** sobre handler stateless: permite manejo de sesion y persistencia
-- **D1 sobre KV**: integridad relacional con foreign keys, JOINs para consultas de carrito
-- **Validacion con Zod**: validacion de tipos en la capa MCP antes de llegar al handler
-- **Precios por volumen**: El esquema soporta 3 niveles de precio (50, 100, 200 unidades)
-- **Mensajes en espanol**: Todas las respuestas del agente estan en espanol para alinearse con el mercado objetivo

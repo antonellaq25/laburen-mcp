@@ -107,3 +107,8 @@ migrations/         - SQL de migracion D1
 seeds/              - SQL de datos generado desde XLSX
 docs/               - Documentacion conceptual
 ```
+
+## Documentacion
+
+- [Diseño Conceptual](docs/conceptual-design.md) - Arquitectura del sistema, modelo de datos y especificacion de herramientas MCP
+- [Flujo de Interaccion](docs/interaction-flow.md) - Diagramas de secuencia y componentes del sistema
