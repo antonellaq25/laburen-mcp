@@ -84,6 +84,14 @@ npm run deploy
 
 ## Testing
 
+### Unit tests
+
+```bash
+npm test
+```
+
+### MCP Inspector
+
 Conectar con MCP Inspector:
 
 ```bash
