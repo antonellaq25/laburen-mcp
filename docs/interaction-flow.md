@@ -21,8 +21,6 @@ sequenceDiagram
     T-->>C: Respuesta del agente
 ```
 
-![Flujo de Mensajeria](messages-flow.svg)
-
 Los siguientes diagramas muestran la interaccion entre el agente y el MCP Server para cada fase.
 
 ### Fase 1: Exploracion de Productos
@@ -42,8 +40,6 @@ sequenceDiagram
     L-->>C: "Tenemos estas camisetas deportivas disponibles..."
 ```
 
-![Fase 1: Exploracion de Productos](phase1.svg)
-
 ### Fase 2: Detalle de Producto
 
 ```mermaid
@@ -61,8 +57,6 @@ sequenceDiagram
     M-->>L: Info completa con precios por volumen
     L-->>C: "Camiseta S Azul - $1128 (50u), $1351 (100u), $737 (200u)"
 ```
-
-![Fase 2: Detalle de Producto](phase2.svg)
 
 ### Fase 3: Creacion de Carrito
 
@@ -85,8 +79,6 @@ sequenceDiagram
     L-->>C: "He agregado 100 unidades de Camiseta S Azul a tu carrito"
 ```
 
-![Fase 3: Creacion de Carrito](phase3.svg)
-
 ### Fase 4: Edicion del Carrito
 
 ```mermaid
@@ -102,8 +94,6 @@ sequenceDiagram
     M-->>L: Actualizado
     L-->>C: "Cantidad actualizada a 50 unidades"
 ```
-
-![Fase 4: Edicion del Carrito](phase4.svg)
 
 ### Fase 5: Revision del Carrito
 
@@ -122,8 +112,6 @@ sequenceDiagram
     L-->>C: "Tu carrito: 50x Camiseta S Azul..."
 ```
 
-![Fase 5: Revision del Carrito](phase5.svg)
-
 ### Fase 6: Escalacion
 
 ```mermaid
@@ -137,8 +125,6 @@ sequenceDiagram
     M-->>L: Escalacion confirmada
     L-->>C: "Te conecto con un agente que puede ayudarte con descuentos especiales"
 ```
-
-![Fase 6: Escalacion](phase6.svg)
 
 ## Diagrama de Componentes
 
@@ -168,5 +154,3 @@ graph TD
     J -.->|FK| K
     I -.->|FK| K
 ```
-
-![Diagrama de Componentes](component-diagram.svg)
